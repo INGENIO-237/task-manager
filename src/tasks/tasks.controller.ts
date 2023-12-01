@@ -22,7 +22,7 @@ export class TasksController {
     return this.tasksService.createTask(task);
   }
 
-  @Patch("/:id")
+  @Patch("/:id/status")
   updateTaskStatus(@Param("id") id: string, @Body("status") status: TASK_STATUS){
     return this.tasksService.updateTaskStatus(id, status)
   }
