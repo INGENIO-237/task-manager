@@ -8,6 +8,8 @@ const port = 1337;
 
 (async () => connectToDb())();
 
+server.use(express.json());
+
 router(server);
 
 server.listen(port, () => logger.info(`Server running on ${port}`));
