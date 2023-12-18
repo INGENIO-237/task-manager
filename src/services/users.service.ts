@@ -1,5 +1,5 @@
 import { UserRepository } from "../repositories/users.repository";
-import { createUserInput } from "../schemas/users.schemas";
+import { CreateUserInput } from "../schemas/users.schemas";
 
 const userRepository = UserRepository;
 
@@ -8,9 +8,13 @@ export const UserService = {
     const users = await userRepository.getAllUsers();
     return users;
   },
-  createUser: async (user: createUserInput["body"]) => {
+  createUser: async (user: CreateUserInput["body"]) => {
     const createdUser = await userRepository.createUser(user);
 
     return createdUser;
+  },
+  getUserByEmail: async (email: string) => {
+
+    return await userRepository.getUserByEmail(email);
   },
 };
