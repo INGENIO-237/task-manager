@@ -16,7 +16,5 @@ export const SessionRepository = {
   }: {
     user: string;
     userAgent: string;
-  }) => {
-    
-  },
+  }) => await Session.create({ user, userAgent }),
 };
