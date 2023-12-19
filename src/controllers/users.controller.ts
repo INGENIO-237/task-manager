@@ -1,4 +1,4 @@
-import { createUserInput } from "../schemas/users.schemas";
+import { CreateUserInput } from "../schemas/users.schemas";
 import { UserService } from "../services/users.service";
 import { Request, Response } from "express";
 
@@ -11,7 +11,7 @@ export const UserController = {
     return res.json({ users });
   },
   createUser: async (
-    req: Request<{}, {}, createUserInput["body"]>,
+    req: Request<{}, {}, CreateUserInput["body"]>,
     res: Response
   ) => {
     const user = await userService.createUser(req.body);

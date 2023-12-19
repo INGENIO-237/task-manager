@@ -1,5 +1,6 @@
 import { Express, Request, Response } from "express";
 import UsersRouter from "./routes/users.routes";
+import SessionsRouter from "./routes/sessions.routes";
 
 const router = (server: Express) => {
   server.get("/healthcheck", (req: Request, res: Response) =>
@@ -7,6 +8,7 @@ const router = (server: Express) => {
   );
 
   server.use("/users", UsersRouter);
+  server.use("/sessions", SessionsRouter);
 };
 
 export default router;

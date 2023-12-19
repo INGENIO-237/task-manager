@@ -1,6 +1,7 @@
 import { Document, Schema, model } from "mongoose";
 import config from "config";
 import bcrypt from "bcrypt";
+import Session from "./session.model";
 
 export interface UserDocument extends Document {
   name: string;
@@ -8,6 +9,7 @@ export interface UserDocument extends Document {
   password: string;
   createdAt: Date;
   updatedAt: Date;
+  comparePassword(candidatePassword: string): Promise<boolean>;
 }
 
 const userSchema = new Schema(
@@ -28,6 +30,7 @@ const userSchema = new Schema(
   { timestamps: true }
 );
 
+// Hooks
 userSchema.pre<UserDocument>("save", async function (next) {
   let user = this;
 
@@ -44,6 +47,13 @@ userSchema.pre<UserDocument>("save", async function (next) {
   return next();
 });
 
+userSchema.post<UserDocument>("deleteOne", async function (next) {
+  const deletedUser = this;
+
+  await Session.deleteMany({ user: deletedUser._id });
+});
+
+// Methods
 userSchema.methods.comparePassword = async function (
   candidatePassword: string
 ) {
@@ -54,6 +64,6 @@ userSchema.methods.comparePassword = async function (
     .catch((e) => false);
 };
 
-const User = model("User", userSchema);
+const User = model<UserDocument>("User", userSchema);
 
 export default User;
