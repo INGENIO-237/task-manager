@@ -22,4 +22,7 @@ export const SessionRepository = {
 
     return session;
   },
+  terminateSession: async (sessionId: string) => {
+    await Session.findByIdAndUpdate(sessionId, { valid: false });
+  },
 };

@@ -28,4 +28,7 @@ export const SessionController = {
 
     return res.status(201).json({ accessToken, refreshToken });
   },
+
+  // TODO: Terminate user session
+  // terminateSession: async ()
 };
