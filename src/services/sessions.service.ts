@@ -9,13 +9,16 @@ import { UserService } from "./users.service";
 const sessionRepository = SessionRepository;
 
 export const SessionService = {
-  getSessions: async (filter: FilterSessionsQuery["query"]) => {
-    const sessions = await sessionRepository.getSessions(filter);
+  getSessions: async (filterSet: FilterSessionsQuery["query"]) => {
+    const sessions = await sessionRepository.getSessions(filterSet);
 
     return sessions;
   },
 
-  createSession: async (credentials: CreateSessionInput["body"], userAgent: string) => {
+  createSession: async (
+    credentials: CreateSessionInput["body"],
+    userAgent: string
+  ) => {
     const { email, password } = credentials;
 
     const user = await UserService.getUserByEmail(email);
@@ -24,10 +27,17 @@ export const SessionService = {
 
     if (!user.comparePassword(password)) throw new Error("Incorrect password");
 
-    const session = await sessionRepository.createSession({user: user._id, userAgent })
+    const session = await sessionRepository.createSession({
+      user: user._id,
+      userAgent,
+    });
 
-    const token = signJwt(session)
+    const accessToken = signJwt({ user: user._id });
+    const refreshToken = signJwt({ session: session._id }, true);
 
-    return token
+    return { accessToken, refreshToken };
   },
+
+  getSession: async (filterSet: FilterSessionsQuery["query"]) =>
+    await sessionRepository.getSession(filterSet),
 };

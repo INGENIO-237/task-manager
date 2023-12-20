@@ -2,6 +2,7 @@ import express from "express";
 import logger from "./utils/logger";
 import router from "./router";
 import connectToDb from "./utils/connect";
+import deserializeUser from "./middlewares/deserializeUser";
 
 const server = express();
 const port = 1337;
@@ -9,6 +10,8 @@ const port = 1337;
 (async () => connectToDb())();
 
 server.use(express.json());
+
+server.use(deserializeUser)
 
 router(server);
 
