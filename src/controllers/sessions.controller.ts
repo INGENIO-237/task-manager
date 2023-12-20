@@ -21,11 +21,11 @@ export const SessionController = {
     req: Request<{}, {}, CreateSessionInput["body"]>,
     res: Response
   ) => {
-    const session = sessionService.createSession(
+    const { accessToken, refreshToken } = await sessionService.createSession(
       req.body,
       req.headers["user-agent"] || ""
     );
 
-    return res.status(201).json({ token: session });
+    return res.status(201).json({ accessToken, refreshToken });
   },
 };

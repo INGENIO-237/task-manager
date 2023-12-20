@@ -1,7 +1,8 @@
 import jwt, { SignOptions } from "jsonwebtoken";
-import { SessionDocument } from "../models/session.model";
 import logger from "./logger";
 import config from "config";
+import { get } from "lodash";
+import { SessionService } from "../services/sessions.service";
 
 const PRIVATE_KEY = config.get<string>("privateKey");
 const PUBLIC_KEY = config.get<string>("publicKey");
@@ -9,7 +10,7 @@ const accessTokenTtl = config.get<string>("accessTokenTtl");
 const refreshTokenTtl = config.get<string>("refreshTokenTtl");
 
 export const signJwt = (
-  payload: SessionDocument,
+  payload: object,
   isRefreshToken = false,
   options?: SignOptions
 ) => {
@@ -34,4 +35,22 @@ export const verifyJwt = (token: string) => {
 
     return { expired: true, valid: false, decoded: null };
   }
+};
+
+export const reIssueAccessToken = async ({
+  refreshToken,
+}: {
+  refreshToken: string;
+}) => {
+  const { decoded, expired } = verifyJwt(refreshToken);
+
+  if (expired || !get(decoded, "session")) return false;
+
+  const session = await SessionService.getSession({
+    _id: get(decoded, "session"),
+  });
+
+  if (!session) return false;
+
+  return signJwt({ user: session.user });
 };

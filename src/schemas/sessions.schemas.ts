@@ -14,6 +14,9 @@ export type CreateSessionInput = TypeOf<typeof createSessionSchema>;
 export const filterSessionsSchema = object({
   query: optional(
     object({
+      _id: optional(
+        string({ invalid_type_error: "Session id must be a string" })
+      ),
       user: optional(
         string({ invalid_type_error: "User id must be a string" })
       ),
