@@ -2,16 +2,17 @@ import { Router } from "express";
 import { UserController } from "../controllers/users.controller";
 import validateResource from "../middlewares/validateResource";
 import { createUseSchema } from "../schemas/users.schemas";
+import { tryCatch } from "../utils/errors.utils";
 
 const UsersRouter = Router();
 
 const userController = UserController;
 
-UsersRouter.get("", userController.getAllUsers);
+UsersRouter.get("", tryCatch(userController.getAllUsers));
 UsersRouter.post(
   "",
   validateResource(createUseSchema),
-  userController.createUser
+  tryCatch(userController.createUser)
 );
 
 export default UsersRouter;
