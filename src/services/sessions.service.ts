@@ -29,7 +29,7 @@ export const SessionService = {
 
     if (!user) throw new Error("Unregistered email address");
 
-    if (!user.comparePassword(password)) throw new Error("Incorrect password");
+    if (!await user.comparePassword(password)) throw new Error("Incorrect password");
 
     const session = await sessionRepository.createSession({
       user: user._id,
@@ -42,19 +42,17 @@ export const SessionService = {
     return { accessToken, refreshToken };
   },
 
-  terminateSession: async (accessToken: string) => {
-    const { decoded, expired } = verifyJwt(accessToken);
-    const userId = get(decoded as JwtPayload, "user") as string;
+  terminateSession: async (userId: string) => {
+    const session = await sessionRepository.getSession({
+      user: userId,
+      valid: true,
+    });
 
-    if (decoded) {
-      const session = await sessionRepository.getSession({
-        _id: userId,
-        valid: true,
-      });
-
-      if (!expired && session) {
-        await sessionRepository.terminateSession(session._id.toString());
-      }
+    if (session) {
+      await sessionRepository.updateSession(
+        { _id: session._id.toString() },
+        { valid: false }
+      );
     }
   },
 

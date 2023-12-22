@@ -29,6 +29,9 @@ export const SessionController = {
     return res.status(201).json({ accessToken, refreshToken });
   },
 
-  // TODO: Terminate user session
-  // terminateSession: async ()
+  terminateSession: async (req: Request, res: Response) => {
+    await sessionService.terminateSession(res.locals.user);
+
+    return res.sendStatus(200);
+  },
 };
