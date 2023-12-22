@@ -1,6 +1,9 @@
 import { FilterQuery } from "mongoose";
 import Session from "../models/session.model";
-import { FilterSessionsQuery } from "../schemas/sessions.schemas";
+import {
+  FilterSessionsQuery,
+  UpdateSessions,
+} from "../schemas/sessions.schemas";
 
 export const SessionRepository = {
   getSessions: async (filterSet: FilterSessionsQuery["query"]) => {
@@ -22,7 +25,10 @@ export const SessionRepository = {
 
     return session;
   },
-  terminateSession: async (sessionId: string) => {
-    await Session.findByIdAndUpdate(sessionId, { valid: false });
+  updateSession: async (
+    filter: UpdateSessions["params"],
+    update: UpdateSessions["body"]
+  ) => {
+    await Session.updateMany(filter, update);
   },
 };

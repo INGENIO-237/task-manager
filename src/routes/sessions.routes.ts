@@ -5,6 +5,7 @@ import {
   createSessionSchema,
   filterSessionsSchema,
 } from "../schemas/sessions.schemas";
+import { requireAccess } from "../middlewares/access";
 
 const SessionsRouter = Router();
 const sessionController = SessionController;
@@ -18,6 +19,11 @@ SessionsRouter.post(
   "",
   validateResource(createSessionSchema),
   sessionController.createSession
+);
+SessionsRouter.post(
+  "/terminate",
+  requireAccess,
+  sessionController.terminateSession
 );
 
 export default SessionsRouter;

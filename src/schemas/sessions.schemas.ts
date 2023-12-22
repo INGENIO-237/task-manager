@@ -28,3 +28,19 @@ export const filterSessionsSchema = object({
 });
 
 export type FilterSessionsQuery = TypeOf<typeof filterSessionsSchema>;
+
+export const updateSessionsSchema = object({
+  params: object({
+    _id: string({
+      invalid_type_error: "Session id must be a string",
+      required_error: "Session id is required",
+    }),
+    valid: optional(boolean({ invalid_type_error: "Valid must be a boolean" })),
+  }),
+  body: object({
+    user: optional(string({ invalid_type_error: "User id must be a string" })),
+    valid: optional(boolean({ invalid_type_error: "Valid must be a boolean" })),
+  }),
+});
+
+export type UpdateSessions = TypeOf<typeof updateSessionsSchema>;
