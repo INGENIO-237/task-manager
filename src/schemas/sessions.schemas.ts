@@ -5,7 +5,10 @@ export const createSessionSchema = object({
     email: string({
       required_error: "Email is required",
     }).email("Invalid email format"),
-    password: string({ required_error: "Password is required" }),
+    password: string({ required_error: "Password is required" }).min(
+      6,
+      "Password too short - 6 chars minimum"
+    ),
   }),
 });
 

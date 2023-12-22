@@ -1,12 +1,13 @@
 import { NextFunction, Request, Response } from "express";
 import { reIssueAccessToken, verifyJwt } from "../utils/jwt.utils";
+import { JwtPayload } from "jsonwebtoken";
 
 const deserializeUser = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
-  const accessToken = req.headers.authorization?.replace("/^Beares/", "") || "";
+  const accessToken = req.headers.authorization?.replace(/^Bearer\s/, "") ?? "";
   const refreshToken = req.headers["x-refresh"] ?? "";
 
   if (!accessToken) return next();
@@ -14,7 +15,9 @@ const deserializeUser = async (
   const { decoded, expired } = verifyJwt(accessToken);
 
   if (decoded) {
-    res.locals.user = decoded;
+    const { user } = decoded as JwtPayload;
+
+    res.locals.user = user as string;
     return next();
   }
 
