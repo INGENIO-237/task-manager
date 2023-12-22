@@ -7,6 +7,7 @@ import {
 import { signJwt, verifyJwt } from "../utils/jwt.utils";
 import { UserService } from "./users.service";
 import { JwtPayload } from "jsonwebtoken";
+import { OperationalError } from "../utils/errors.utils";
 
 const sessionRepository = SessionRepository;
 
@@ -27,9 +28,9 @@ export const SessionService = {
 
     // TODO: Invalid any active session
 
-    if (!user) throw new Error("Unregistered email address");
+    if (!user) throw new OperationalError("Unregistered email address");
 
-    if (!await user.comparePassword(password)) throw new Error("Incorrect password");
+    if (!await user.comparePassword(password)) throw new OperationalError("Incorrect password");
 
     const session = await sessionRepository.createSession({
       user: user._id,

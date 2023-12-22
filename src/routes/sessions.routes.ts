@@ -6,6 +6,7 @@ import {
   filterSessionsSchema,
 } from "../schemas/sessions.schemas";
 import { requireAccess } from "../middlewares/access";
+import { tryCatch } from "../utils/errors.utils";
 
 const SessionsRouter = Router();
 const sessionController = SessionController;
@@ -13,17 +14,17 @@ const sessionController = SessionController;
 SessionsRouter.get(
   "",
   validateResource(filterSessionsSchema),
-  sessionController.getSessions
+  tryCatch(sessionController.getSessions)
 );
 SessionsRouter.post(
   "",
   validateResource(createSessionSchema),
-  sessionController.createSession
+  tryCatch(sessionController.createSession)
 );
 SessionsRouter.post(
   "/terminate",
   requireAccess,
-  sessionController.terminateSession
+  tryCatch(sessionController.terminateSession)
 );
 
 export default SessionsRouter;
