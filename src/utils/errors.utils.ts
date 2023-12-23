@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import logger from "./logger";
 
 /**
@@ -18,12 +18,12 @@ export class OperationalError extends Error {
 /**
  * TryCatch wrapper for handling errors
  *
- * @param {Function} controller
+ * @param {Function} handler
  */
 export const tryCatch =
-  (controller: Function) => async (req: Request, res: Response) => {
+  (handler: Function) => async (req: Request, res: Response, next?: NextFunction) => {
     try {
-      await controller(req, res);
+      await handler(req, res, next);
     } catch (error) {
       logger.info("==================START==================");
       logger.error(error);

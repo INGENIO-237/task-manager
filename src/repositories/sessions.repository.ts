@@ -1,5 +1,5 @@
 import { FilterQuery } from "mongoose";
-import Session from "../models/session.model";
+import Session from "../models/sessions.model";
 import {
   FilterSessionsQuery,
   UpdateSessions,

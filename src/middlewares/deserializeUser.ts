@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { reIssueAccessToken, verifyJwt } from "../utils/jwt.utils";
 import { JwtPayload } from "jsonwebtoken";
+import { OperationalError } from "../utils/errors.utils";
 
 const deserializeUser = async (
   req: Request,
@@ -30,12 +31,14 @@ const deserializeUser = async (
 
     const { decoded } = verifyJwt(newAccessToken as string);
 
-    res.locals.user = decoded;
+    const { user } = decoded as JwtPayload;
+
+    res.locals.user = user as string;
 
     return next();
+  } else {
+    throw new OperationalError("Your session has expired");
   }
-
-  return next();
 };
 
 export default deserializeUser;
