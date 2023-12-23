@@ -2,10 +2,6 @@ import { TypeOf, boolean, object, optional, string } from "zod";
 
 export const createTaskSchema = object({
   body: object({
-    user: string({
-      required_error: "User Id is required",
-      invalid_type_error: "User Id must be a string",
-    }),
     title: string({
       required_error: "Task title is required",
       invalid_type_error: "Task title must be a string",

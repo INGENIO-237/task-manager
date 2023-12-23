@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { FilterTasksQuery } from "../schemas/tasks.schemas";
+import { CreateTaskInput, FilterTasksQuery } from "../schemas/tasks.schemas";
 import { TaskService } from "../services/tasks.service";
 
 const taskService = TaskService;
@@ -14,5 +14,15 @@ export const TaskController = {
     const tasks = await taskService.getTasks({ user, ...req.query });
 
     return res.status(200).json({ tasks });
+  },
+  createTask: async (
+    req: Request<{}, {}, CreateTaskInput["body"]>,
+    res: Response
+  ) => {
+    const user = res.locals.user;
+
+    const createdTask = await taskService.createTask({ user, ...req.body });
+
+    return res.status(201).json({ task: createdTask });
   },
 };

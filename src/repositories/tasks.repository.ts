@@ -7,4 +7,7 @@ export const TaskRepository = {
 
     return await Task.find(filters);
   },
+  createTask: async ({ user, title }: { user: string; title: string }) => {
+    return await Task.create({ user, title });
+  },
 };
