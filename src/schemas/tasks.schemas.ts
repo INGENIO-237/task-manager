@@ -23,3 +23,20 @@ export const filterTasksSchema = object({
 });
 
 export type FilterTasksQuery = TypeOf<typeof filterTasksSchema>;
+
+export const updateTaskSchema = object({
+  params: object({
+    _id: string({
+      required_error: "Task id is required",
+      invalid_type_error: "Task id must be a string",
+    }),
+  }),
+  body: object({
+    title: optional(string({ invalid_type_error: "Title must be a string" })),
+    completed: optional(
+      boolean({ invalid_type_error: "Task status must be a boolean" })
+    ),
+  }),
+});
+
+export type UpdateTaskEntries = TypeOf<typeof updateTaskSchema>;

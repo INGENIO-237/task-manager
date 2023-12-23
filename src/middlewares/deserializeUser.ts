@@ -31,7 +31,9 @@ const deserializeUser = async (
 
     const { decoded } = verifyJwt(newAccessToken as string);
 
-    res.locals.user = decoded;
+    const { user } = decoded as JwtPayload;
+
+    res.locals.user = user as string;
 
     return next();
   } else {
