@@ -3,6 +3,7 @@ import logger from "./utils/logger";
 import router from "./router";
 import connectToDb from "./utils/connect";
 import deserializeUser from "./middlewares/deserializeUser";
+import { tryCatch } from "./utils/errors.utils";
 
 const server = express();
 const port = 1337;
@@ -11,7 +12,7 @@ const port = 1337;
 
 server.use(express.json());
 
-server.use(deserializeUser)
+server.use(tryCatch(deserializeUser))
 
 router(server);
 

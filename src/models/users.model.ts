@@ -1,7 +1,7 @@
 import { Document, Schema, model } from "mongoose";
 import config from "config";
 import bcrypt from "bcrypt";
-import Session from "./session.model";
+import Session from "./sessions.model";
 
 export interface UserDocument extends Document {
   name: string;
