@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import {
   CreateTaskInput,
+  DeleteTaskParams,
   FilterTasksQuery,
   UpdateTaskEntries,
 } from "../schemas/tasks.schemas";
@@ -35,5 +36,13 @@ export const TaskController = {
   ) => {
     await taskService.updateTask(req.params._id, req.body);
     return res.sendStatus(200);
+  },
+  deleteTask: async (
+    req: Request<DeleteTaskParams["params"]>,
+    res: Response
+  ) => {
+    await taskService.deleteTask(req.params._id);
+
+    return res.sendStatus(200)
   },
 };

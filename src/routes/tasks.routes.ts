@@ -3,7 +3,11 @@ import { tryCatch } from "../utils/errors.utils";
 import { TaskController } from "../controllers/tasks.controller";
 import { requireAccess } from "../middlewares/access";
 import validateResource from "../middlewares/validateResource";
-import { createTaskSchema, updateTaskSchema } from "../schemas/tasks.schemas";
+import {
+  createTaskSchema,
+  deleteTaskSchema,
+  updateTaskSchema,
+} from "../schemas/tasks.schemas";
 
 const TasksRouter = Router();
 const taskController = TaskController;
@@ -21,6 +25,10 @@ TasksRouter.patch(
   validateResource(updateTaskSchema),
   tryCatch(taskController.updateTask)
 );
-TasksRouter.delete("/:_id", )
+TasksRouter.delete(
+  "/:_id",
+  validateResource(deleteTaskSchema),
+  tryCatch(taskController.deleteTask)
+);
 
 export default TasksRouter;

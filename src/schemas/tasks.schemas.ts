@@ -40,3 +40,14 @@ export const updateTaskSchema = object({
 });
 
 export type UpdateTaskEntries = TypeOf<typeof updateTaskSchema>;
+
+export const deleteTaskSchema = object({
+  params: object({
+    _id: string({
+      required_error: "Task id is required",
+      invalid_type_error: "Task id must be a string",
+    }),
+  }),
+});
+
+export type DeleteTaskParams = TypeOf<typeof deleteTaskSchema>;
