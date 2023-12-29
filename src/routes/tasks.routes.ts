@@ -1,5 +1,4 @@
 import { Router } from "express";
-import { tryCatch } from "../utils/errors.utils";
 import { TaskController } from "../controllers/tasks.controller";
 import { requireAccess } from "../middlewares/access";
 import validateResource from "../middlewares/validateResource";
@@ -8,6 +7,7 @@ import {
   deleteTaskSchema,
   updateTaskSchema,
 } from "../schemas/tasks.schemas";
+import tryCatch from "../utils/tryCatch";
 
 const TasksRouter = Router();
 const taskController = TaskController;

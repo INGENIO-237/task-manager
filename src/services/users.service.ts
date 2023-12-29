@@ -1,6 +1,7 @@
 import { UserRepository } from "../repositories/users.repository";
 import { CreateUserInput } from "../schemas/users.schemas";
-import { OperationalError } from "../utils/errors.utils";
+import ApiError from "../utils/errors/errors.base";
+import HTTP_RESPONSE_CODES from "../utils/http.codes";
 
 const userRepository = UserRepository;
 
@@ -12,7 +13,7 @@ export const UserService = {
   createUser: async (user: CreateUserInput["body"]) => {
     const existingUser = await userRepository.getUserByEmail(user.email);
 
-    if (existingUser) throw new OperationalError("Email already in use");
+    if (existingUser) throw new ApiError("Email already in use", HTTP_RESPONSE_CODES.BAD_REQUEST);
 
     const createdUser = await userRepository.createUser(user);
 

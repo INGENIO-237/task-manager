@@ -6,7 +6,7 @@ import {
   filterSessionsSchema,
 } from "../schemas/sessions.schemas";
 import { requireAccess } from "../middlewares/access";
-import { tryCatch } from "../utils/errors.utils";
+import tryCatch from "../utils/tryCatch";
 
 const SessionsRouter = Router();
 const sessionController = SessionController;

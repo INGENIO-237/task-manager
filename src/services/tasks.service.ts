@@ -1,6 +1,7 @@
 import { TaskRepository } from "../repositories/tasks.repository";
 import { UpdateTaskEntries } from "../schemas/tasks.schemas";
-import { OperationalError } from "../utils/errors.utils";
+import ApiError from "../utils/errors/errors.base";
+import HTTP_RESPONSE_CODES from "../utils/http.codes";
 
 const taskRepository = TaskRepository;
 
@@ -14,14 +15,14 @@ export const TaskService = {
   updateTask: async (taskId: string, update: UpdateTaskEntries["body"]) => {
     const task = await taskRepository.getTaskById(taskId);
 
-    if (!task) throw new OperationalError("Task not found");
+    if (!task) throw new ApiError("Task not found", HTTP_RESPONSE_CODES.NOT_FOUND);
     
     await taskRepository.updateTask(taskId, update);
   },
   deleteTask: async(taskId: string) => {
     const task = await taskRepository.getTaskById(taskId);
 
-    if(!task) throw new OperationalError("Task not found")
+    if(!task) throw new ApiError("Task not found", HTTP_RESPONSE_CODES.NOT_FOUND)
 
     await taskRepository.deleteTask(taskId);
   }
