@@ -1,7 +1,8 @@
 import { NextFunction, Request, Response } from "express";
 import { reIssueAccessToken, verifyJwt } from "../utils/jwt.utils";
 import { JwtPayload } from "jsonwebtoken";
-import { OperationalError } from "../utils/errors.utils";
+import ApiError from "../utils/errors/errors.base";
+import HTTP_RESPONSE_CODES from "../utils/http.codes";
 
 const deserializeUser = async (
   req: Request,
@@ -37,7 +38,7 @@ const deserializeUser = async (
 
     return next();
   } else {
-    throw new OperationalError("Your session has expired");
+    throw new ApiError("Your session has expired", HTTP_RESPONSE_CODES.FORBIDDEN);
   }
 };
 

@@ -2,7 +2,7 @@ import { Router } from "express";
 import { UserController } from "../controllers/users.controller";
 import validateResource from "../middlewares/validateResource";
 import { createUseSchema } from "../schemas/users.schemas";
-import { tryCatch } from "../utils/errors.utils";
+import tryCatch from "../utils/tryCatch";
 
 const UsersRouter = Router();
 

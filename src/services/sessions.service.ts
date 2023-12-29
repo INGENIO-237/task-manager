@@ -1,4 +1,3 @@
-import { get } from "lodash";
 import { SessionRepository } from "../repositories/sessions.repository";
 import {
   CreateSessionInput,
@@ -6,9 +5,8 @@ import {
 } from "../schemas/sessions.schemas";
 import { signJwt, verifyJwt } from "../utils/jwt.utils";
 import { UserService } from "./users.service";
-import { JwtPayload } from "jsonwebtoken";
-import { OperationalError } from "../utils/errors.utils";
-
+import ApiError from "../utils/errors/errors.base";
+import HTTP_RESPONSE_CODES from "../utils/http.codes";
 const sessionRepository = SessionRepository;
 
 export const SessionService = {
@@ -28,9 +26,14 @@ export const SessionService = {
 
     // TODO: Invalid any active session
 
-    if (!user) throw new OperationalError("Unregistered email address");
+    if (!user)
+      throw new ApiError(
+        "Unregistered email address",
+        HTTP_RESPONSE_CODES.BAD_REQUEST
+      );
 
-    if (!await user.comparePassword(password)) throw new OperationalError("Incorrect password");
+    if (!(await user.comparePassword(password)))
+      throw new ApiError("Incorrect password", HTTP_RESPONSE_CODES.BAD_REQUEST);
 
     const session = await sessionRepository.createSession({
       user: user._id,
