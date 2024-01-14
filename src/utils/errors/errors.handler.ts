@@ -9,7 +9,7 @@ const errorHandler = (
   res: Response,
   next: NextFunction
 ) => {
-  logError(error);
+  // logError(error);
   if (error.isOperationalError) {
     return res.status(error.statusCode).json([{ message: error.message }]);
   } else {
