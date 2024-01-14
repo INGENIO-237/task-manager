@@ -29,7 +29,7 @@ export const SessionService = {
     if (!user)
       throw new ApiError(
         "Unregistered email address",
-        HTTP_RESPONSE_CODES.BAD_REQUEST
+        HTTP_RESPONSE_CODES.NOT_FOUND
       );
 
     if (!(await user.comparePassword(password)))
