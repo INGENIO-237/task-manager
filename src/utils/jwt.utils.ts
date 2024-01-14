@@ -1,13 +1,16 @@
 import jwt, { SignOptions } from "jsonwebtoken";
 import logger from "./logger";
-import config from "config";
 import { get } from "lodash";
 import { SessionService } from "../services/sessions.service";
+import {
+  accessTokenTtl,
+  privateKey,
+  publicKey,
+  refreshTokenTtl,
+} from "../config/config";
 
-const PRIVATE_KEY = config.get<string>("privateKey");
-const PUBLIC_KEY = config.get<string>("publicKey");
-const accessTokenTtl = config.get<string>("accessTokenTtl");
-const refreshTokenTtl = config.get<string>("refreshTokenTtl");
+const PRIVATE_KEY = privateKey as string;
+const PUBLIC_KEY = publicKey as string;
 
 export const signJwt = (
   payload: object,

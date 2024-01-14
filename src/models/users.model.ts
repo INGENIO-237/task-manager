@@ -1,7 +1,7 @@
 import { Document, Schema, model } from "mongoose";
-import config from "config";
 import bcrypt from "bcrypt";
 import Session from "./sessions.model";
+import { saltFactor } from "../config/config";
 
 export interface UserDocument extends Document {
   name: string;
@@ -38,9 +38,8 @@ userSchema.pre<UserDocument>("save", async function (next) {
     return next();
   }
 
-  const salt = config.get<string>("saltFactor");
 
-  const hash = await bcrypt.hash(user.password, salt);
+  const hash = await bcrypt.hash(user.password, saltFactor as string);
 
   user.password = hash;
 

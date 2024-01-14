@@ -1,11 +1,9 @@
 import connectToDb from "./utils/connect";
 import logger from "./utils/logger";
 import createServer from "./utils/server.utils";
-import config from "config";
+import { port } from "./config/config";
 
-const port = config.get<number>("port");
-
-(async () => connectToDb())();
+(async () => await connectToDb())();
 
 const server = createServer();
 
