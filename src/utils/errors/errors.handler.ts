@@ -13,10 +13,11 @@ const errorHandler = (
   if (error.isOperationalError) {
     return res.status(error.statusCode).json([{ message: error.message }]);
   } else {
-    res
+    logError(error);
+    return res
       .status(HTTP_RESPONSE_CODES.INTERNAL_SERVER)
       .json([{ message: "Something went wrong. Retry later." }]);
-    return process.exit(1);
+    // return process.exit(1);
   }
 };
 
