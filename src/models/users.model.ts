@@ -38,8 +38,8 @@ userSchema.pre<UserDocument>("save", async function (next) {
     return next();
   }
 
-
-  const hash = await bcrypt.hash(user.password, saltFactor as string);
+  const salt = await bcrypt.genSalt(parseInt(saltFactor as string));
+  const hash = await bcrypt.hash(user.password, salt);
 
   user.password = hash;
 
