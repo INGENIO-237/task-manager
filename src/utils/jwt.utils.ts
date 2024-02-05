@@ -1,13 +1,19 @@
+import "reflect-metadata";
+
 import jwt, { SignOptions } from "jsonwebtoken";
 import logger from "./logger";
 import { get } from "lodash";
-import { SessionService } from "../services/sessions.service";
+import SessionService from "../services/sessions.service";
 import {
   accessTokenTtl,
   privateKey,
   publicKey,
   refreshTokenTtl,
 } from "../config/config";
+
+import Container from "typedi";
+
+const sessionService = Container.get(SessionService);
 
 const PRIVATE_KEY = privateKey as string;
 const PUBLIC_KEY = publicKey as string;
@@ -49,7 +55,7 @@ export const reIssueAccessToken = async ({
 
   if (expired || !get(decoded, "session")) return false;
 
-  const session = await SessionService.getSession({
+  const session = await sessionService.getSession({
     _id: get(decoded, "session"),
   });
 

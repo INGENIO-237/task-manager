@@ -1,37 +1,42 @@
 import { Request, Response } from "express";
-import { SessionService } from "../services/sessions.service";
+import SessionService from "../services/sessions.service";
 import {
   CreateSessionInput,
   FilterSessionsQuery,
 } from "../schemas/sessions.schemas";
+import { Service } from "typedi";
 
-const sessionService = SessionService;
+@Service()
+class SessionController {
+  constructor(private sessionService: SessionService) {}
 
-export const SessionController = {
-  getSessions: async (
+  async getSessions(
     req: Request<{}, {}, {}, FilterSessionsQuery["query"]>,
     res: Response
-  ) => {
-    const sessions = await sessionService.getSessions(req.query);
+  ) {
+    const sessions = await this.sessionService.getSessions(req.query);
 
     return res.json({ sessions });
-  },
+  }
 
-  createSession: async (
+  async createSession(
     req: Request<{}, {}, CreateSessionInput["body"]>,
     res: Response
-  ) => {
-    const { accessToken, refreshToken } = await sessionService.createSession(
-      req.body,
-      req.headers["user-agent"] || ""
-    );
+  ) {
+    const { accessToken, refreshToken } =
+      await this.sessionService.createSession(
+        req.body,
+        req.headers["user-agent"] || ""
+      );
 
     return res.status(201).json({ accessToken, refreshToken });
-  },
+  }
 
-  terminateSession: async (req: Request, res: Response) => {
-    await sessionService.terminateSession(res.locals.user);
+  async terminateSession(req: Request, res: Response) {
+    await this.sessionService.terminateSession(res.locals.user);
 
     return res.sendStatus(200);
-  },
-};
+  }
+}
+
+export default SessionController

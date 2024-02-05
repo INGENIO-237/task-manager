@@ -1,15 +1,20 @@
+import "reflect-metadata";
+
+import UserController from "../controllers/users.controller";
 import { Router } from "express";
-import { UserController } from "../controllers/users.controller";
 import validateResource from "../middlewares/validateResource";
 import { createUseSchema } from "../schemas/users.schemas";
 import tryCatch from "../utils/tryCatch";
 import { requireAccess } from "../middlewares/access";
+import Container from "typedi";
+
+const userController = Container.get(UserController);
 
 const UsersRouter = Router();
 
-const userController = UserController;
+UsersRouter.use(requireAccess);
 
-UsersRouter.get("", requireAccess, tryCatch(userController.getAllUsers));
+UsersRouter.get("", tryCatch(userController.getUsers.bind(userController)));
 UsersRouter.post(
   "",
   validateResource(createUseSchema),

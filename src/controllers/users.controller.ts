@@ -1,21 +1,24 @@
 import { CreateUserInput } from "../schemas/users.schemas";
-import { UserService } from "../services/users.service";
 import { Request, Response } from "express";
+import UserService from "../services/users.service";
+import { Service } from "typedi";
 
-const userService = UserService;
+@Service()
+class UserController {
+  constructor(private userService: UserService) {}
 
-export const UserController = {
-  getAllUsers: async (req: Request, res: Response) => {
-    const users = await userService.getAllUsers();
-
+  async getUsers(req: Request, res: Response) {
+    const users = await this.userService.getUsers();
     return res.json({ users });
-  },
-  createUser: async (
+  }
+  async createUser(
     req: Request<{}, {}, CreateUserInput["body"]>,
     res: Response
-  ) => {
-    const user = await userService.createUser(req.body);
+  ) {
+    const user = this.userService.createUser(req.body);
 
     return res.status(201).json({ user });
-  },
-};
+  }
+}
+
+export default UserController;

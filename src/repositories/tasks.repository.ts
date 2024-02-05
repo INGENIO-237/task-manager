@@ -1,25 +1,29 @@
 import { FilterQuery } from "mongoose";
 import { Task } from "../models/tasks.model";
 import { UpdateTaskEntries } from "../schemas/tasks.schemas";
+import { Service } from "typedi";
 
-export const TaskRepository = {
-  getTasks: async ({ ...filter }) => {
+@Service()
+class TaskRepository {
+    async getTasks ({ ...filter }) {
     const filters: FilterQuery<any> = filter || {};
 
     return await Task.find(filters);
-  },
-  getTaskById: async (taskId: string) => {
+  }
+  async getTaskById (taskId: string) {
     const task = await Task.findById(taskId);
 
     return task;
-  },
-  createTask: async ({ user, title }: { user: string; title: string }) => {
+  }
+  async createTask ({ user, title }: { user: string; title: string }) {
     return await Task.create({ user, title });
-  },
-  updateTask: async (taskId: string, update: UpdateTaskEntries["body"]) => {
+  }
+  async updateTask (taskId: string, update: UpdateTaskEntries["body"]) {
     await Task.findByIdAndUpdate(taskId, update);
-  },
-  deleteTask: async (taskId: string) => {
+  }
+  async deleteTask (taskId: string) {
     await Task.findByIdAndDelete(taskId)
   }
 };
+
+export default TaskRepository
