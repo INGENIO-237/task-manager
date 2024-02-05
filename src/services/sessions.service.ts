@@ -1,28 +1,36 @@
-import { SessionRepository } from "../repositories/sessions.repository";
+import "reflect-metadata"
+
+import SessionRepository from "../repositories/sessions.repository";
 import {
   CreateSessionInput,
   FilterSessionsQuery,
 } from "../schemas/sessions.schemas";
 import { signJwt, verifyJwt } from "../utils/jwt.utils";
-import { UserService } from "./users.service";
+import UserService from "./users.service";
 import ApiError from "../utils/errors/errors.base";
 import HTTP_RESPONSE_CODES from "../utils/http.codes";
-const sessionRepository = SessionRepository;
+import { Inject, Service } from "typedi";
 
-export const SessionService = {
-  getSessions: async (filterSet: FilterSessionsQuery["query"]) => {
-    const sessions = await sessionRepository.getSessions(filterSet);
+@Service()
+class SessionService {
+  constructor(
+    private sessionRepository: SessionRepository,
+    @Inject() private userService: UserService
+  ) {}
+
+  async getSessions(filterSet: FilterSessionsQuery["query"]) {
+    const sessions = await this.sessionRepository.getSessions(filterSet);
 
     return sessions;
-  },
+  }
 
-  createSession: async (
+  async createSession(
     credentials: CreateSessionInput["body"],
     userAgent: string
-  ) => {
+  ) {
     const { email, password } = credentials;
 
-    const user = await UserService.getUserByEmail(email);
+    const user = await this.userService.getUserByEmail(email);
 
     // TODO: Invalid any active session
 
@@ -35,7 +43,7 @@ export const SessionService = {
     if (!(await user.comparePassword(password)))
       throw new ApiError("Incorrect password", HTTP_RESPONSE_CODES.BAD_REQUEST);
 
-    const session = await sessionRepository.createSession({
+    const session = await this.sessionRepository.createSession({
       user: user._id,
       userAgent,
     });
@@ -44,22 +52,25 @@ export const SessionService = {
     const refreshToken = signJwt({ session: session._id }, true);
 
     return { accessToken, refreshToken };
-  },
+  }
 
-  terminateSession: async (userId: string) => {
-    const session = await sessionRepository.getSession({
+  async terminateSession(userId: string) {
+    const session = await this.sessionRepository.getSession({
       user: userId,
       valid: true,
     });
 
     if (session) {
-      await sessionRepository.updateSession(
+      await this.sessionRepository.updateSession(
         { _id: session._id.toString() },
         { valid: false }
       );
     }
-  },
+  }
 
-  getSession: async (filterSet: FilterSessionsQuery["query"]) =>
-    await sessionRepository.getSession(filterSet),
-};
+  async getSession(filterSet: FilterSessionsQuery["query"]) {
+    return await this.sessionRepository.getSession(filterSet);
+  }
+}
+
+export default SessionService;

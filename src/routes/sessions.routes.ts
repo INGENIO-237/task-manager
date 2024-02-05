@@ -1,5 +1,7 @@
+import "reflect-metadata";
+
 import { Router } from "express";
-import { SessionController } from "../controllers/sessions.controller";
+import SessionController from "../controllers/sessions.controller";
 import validateResource from "../middlewares/validateResource";
 import {
   createSessionSchema,
@@ -7,24 +9,26 @@ import {
 } from "../schemas/sessions.schemas";
 import { requireAccess } from "../middlewares/access";
 import tryCatch from "../utils/tryCatch";
+import Container from "typedi";
 
 const SessionsRouter = Router();
-const sessionController = SessionController;
+
+const sessionController = Container.get(SessionController);
 
 SessionsRouter.get(
   "",
   validateResource(filterSessionsSchema),
-  tryCatch(sessionController.getSessions)
+  tryCatch(sessionController.getSessions.bind(sessionController))
 );
 SessionsRouter.post(
   "",
   validateResource(createSessionSchema),
-  tryCatch(sessionController.createSession)
+  tryCatch(sessionController.createSession.bind(sessionController))
 );
 SessionsRouter.post(
   "/terminate",
   requireAccess,
-  tryCatch(sessionController.terminateSession)
+  tryCatch(sessionController.terminateSession.bind(sessionController))
 );
 
 export default SessionsRouter;
