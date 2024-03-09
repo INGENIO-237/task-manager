@@ -40,8 +40,6 @@ export const verifyJwt = (token: string) => {
       expired: false,
     };
   } catch (error: any) {
-    logger.error(error.message);
-
     return { expired: true, valid: false, decoded: null };
   }
 };
