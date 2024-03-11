@@ -11,11 +11,13 @@ import {
 } from "../schemas/tasks.schemas";
 import tryCatch from "../utils/tryCatch";
 import Container from "typedi";
+import deserializeUser from "../middlewares/deserializeUser";
 
 const TasksRouter = Router();
 
 const taskController = Container.get(TaskController);
 
+TasksRouter.use(tryCatch(deserializeUser));
 TasksRouter.use(requireAccess);
 
 TasksRouter.get("", tryCatch(taskController.getTasks.bind(taskController)));

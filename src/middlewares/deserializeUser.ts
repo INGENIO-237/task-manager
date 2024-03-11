@@ -22,7 +22,7 @@ const deserializeUser = async (
     res.locals.user = user as string;
     return next();
   }
-
+  
   if (expired && refreshToken) {
     const newAccessToken = await reIssueAccessToken({
       refreshToken: refreshToken as string,
@@ -31,9 +31,12 @@ const deserializeUser = async (
     if (newAccessToken) res.setHeader("x-access-token", newAccessToken);
 
     const { decoded, expired } = verifyJwt(newAccessToken as string);
-    
-    if(expired) {
-      throw new ApiError("Your session has expired", HTTP_RESPONSE_CODES.FORBIDDEN)
+
+    if (expired) {
+      throw new ApiError(
+        "Your session has expired",
+        HTTP_RESPONSE_CODES.FORBIDDEN
+      );
     }
 
     const { user } = decoded as JwtPayload;
@@ -42,7 +45,10 @@ const deserializeUser = async (
 
     return next();
   } else {
-    throw new ApiError("Your session has expired", HTTP_RESPONSE_CODES.FORBIDDEN);
+    throw new ApiError(
+      "Your session has expired",
+      HTTP_RESPONSE_CODES.FORBIDDEN
+    );
   }
 };
 

@@ -10,6 +10,7 @@ import {
 import { requireAccess } from "../middlewares/access";
 import tryCatch from "../utils/tryCatch";
 import Container from "typedi";
+import deserializeUser from "../middlewares/deserializeUser";
 
 const SessionsRouter = Router();
 
@@ -27,6 +28,7 @@ SessionsRouter.post(
 );
 SessionsRouter.post(
   "/terminate",
+  tryCatch(deserializeUser),
   requireAccess,
   tryCatch(sessionController.terminateSession.bind(sessionController))
 );

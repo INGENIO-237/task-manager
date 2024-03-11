@@ -3,13 +3,22 @@ import TaskRepository from "../repositories/tasks.repository";
 import { UpdateTaskEntries } from "../schemas/tasks.schemas";
 import ApiError from "../utils/errors/errors.base";
 import HTTP_RESPONSE_CODES from "../utils/http.codes";
+import cache, { CACHE_KEYS } from "../utils/caching.utils";
+import { TaskDocument } from "../models/tasks.model";
 
 @Service()
 class TaskService {
   constructor(private taskRepository: TaskRepository) {}
 
   async getTasks({ user, ...filter }: { user: string }) {
-    return await this.taskRepository.getTasks({ user, ...filter });
+    let tasks = cache.get<TaskDocument[]>(CACHE_KEYS.TASKS);
+
+    if (!tasks) {
+      tasks = await this.taskRepository.getTasks({ user, ...filter });
+      cache.set(CACHE_KEYS.TASKS, tasks);
+    }
+    
+    return tasks;
   }
   async createTask({ user, title }: { user: string; title: string }) {
     return await this.taskRepository.createTask({ user, title });

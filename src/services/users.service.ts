@@ -4,13 +4,20 @@ import UserRepository from "../repositories/users.repository";
 import { CreateUserInput } from "../schemas/users.schemas";
 import ApiError from "../utils/errors/errors.base";
 import HTTP_RESPONSE_CODES from "../utils/http.codes";
+import cache, { CACHE_KEYS } from "../utils/caching.utils";
 
 @Service()
 class UserService {
   constructor(private userRepository: UserRepository) {}
 
   async getUsers(): Promise<UserDocument[]> {
-    return await this.userRepository.getUsers();
+    let users = cache.get<UserDocument[]>(CACHE_KEYS.USERS);
+
+    if (!users) {
+      users = await this.userRepository.getUsers();
+      cache.set(CACHE_KEYS.USERS, users);
+    }
+    return users;
   }
 
   async createUser(user: CreateUserInput["body"]) {
