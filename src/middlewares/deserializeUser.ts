@@ -30,7 +30,11 @@ const deserializeUser = async (
 
     if (newAccessToken) res.setHeader("x-access-token", newAccessToken);
 
-    const { decoded } = verifyJwt(newAccessToken as string);
+    const { decoded, expired } = verifyJwt(newAccessToken as string);
+    
+    if(expired) {
+      throw new ApiError("Your session has expired", HTTP_RESPONSE_CODES.FORBIDDEN)
+    }
 
     const { user } = decoded as JwtPayload;
 
