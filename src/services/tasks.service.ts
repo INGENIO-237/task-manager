@@ -16,7 +16,6 @@ class TaskService {
     if (!tasks) {
       tasks = await this.taskRepository.getTasks({ user, ...filter });
       cache.set(CACHE_KEYS.TASKS, tasks);
-      console.log("Tasks from DB");
     }
     
     return tasks;

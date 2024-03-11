@@ -7,11 +7,13 @@ import { createUseSchema } from "../schemas/users.schemas";
 import tryCatch from "../utils/tryCatch";
 import { requireAccess } from "../middlewares/access";
 import Container from "typedi";
+import deserializeUser from "../middlewares/deserializeUser";
 
 const userController = Container.get(UserController);
 
 const UsersRouter = Router();
 
+UsersRouter.use(tryCatch(deserializeUser));
 UsersRouter.use(requireAccess);
 
 UsersRouter.get("", tryCatch(userController.getUsers.bind(userController)));
