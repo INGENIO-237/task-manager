@@ -15,7 +15,7 @@ class UserController {
     req: Request<{}, {}, CreateUserInput["body"]>,
     res: Response
   ) {
-    const user = this.userService.createUser(req.body);
+    const user = await this.userService.createUser(req.body);
 
     return res.status(201).json({ user });
   }

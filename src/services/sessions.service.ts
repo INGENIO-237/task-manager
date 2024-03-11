@@ -1,21 +1,21 @@
-import "reflect-metadata"
+import "reflect-metadata";
 
 import SessionRepository from "../repositories/sessions.repository";
 import {
   CreateSessionInput,
   FilterSessionsQuery,
 } from "../schemas/sessions.schemas";
-import { signJwt, verifyJwt } from "../utils/jwt.utils";
+import { signJwt } from "../utils/jwt.utils";
 import UserService from "./users.service";
 import ApiError from "../utils/errors/errors.base";
 import HTTP_RESPONSE_CODES from "../utils/http.codes";
-import { Inject, Service } from "typedi";
+import { Service } from "typedi";
 
 @Service()
 class SessionService {
   constructor(
     private sessionRepository: SessionRepository,
-    @Inject() private userService: UserService
+    private userService: UserService
   ) {}
 
   async getSessions(filterSet: FilterSessionsQuery["query"]) {

@@ -20,7 +20,7 @@ UsersRouter.get("", tryCatch(userController.getUsers.bind(userController)));
 UsersRouter.post(
   "",
   validateResource(createUseSchema),
-  tryCatch(userController.createUser)
+  tryCatch(userController.createUser.bind(userController))
 );
 
 export default UsersRouter;
